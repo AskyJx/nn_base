@@ -17,15 +17,15 @@ trace_file = '../traceData/tmp_data.txt'
 path_minst_unpack='YOUR_MNIST_data_unpack_DIR'
 
 INIT_W = 0.01 # 权值初始化参数
-LEARNING_RATE = 0.1 #学习率
+LEARNING_BASE_RATE = 0.1 #基础学习率
+LEARNING_DECAY_RATE = 0.99 #学习率衰减系数
 REG_PARA = 0.5 # 正则化乘数
-LAMDA = 1e-3  # 正则化系数lamda
-EPOCH_NUM=40 # EPOCH
+LAMDA = 1e-4  # 正则化系数lamda
+EPOCH_NUM=50 # EPOCH
 MINI_BATCH_SIZE = 1000 # batch_size
 ITERATION =15 #每batch训练轮数
 HIDDEN_LAYER_NUM = 500 # size of hidden layer
 TYPE_K = 10 #分类类别
-
 
 
 # 设置缺省数值类型
@@ -183,6 +183,8 @@ def main():
 
     batches_per_epoch =int(np.ceil( len(labels) / MINI_BATCH_SIZE ))
     for epoch in range(EPOCH_NUM):
+        # 学习率指数衰减
+        learning_rate = LEARNING_BASE_RATE * (LEARNING_DECAY_RATE**epoch)
         rest_range = sample_range
         for batch in range(batches_per_epoch):
             # 无放回抽样每次随机抽一个mini-batch进行I轮训练，遍历全部训练sample
@@ -260,8 +262,8 @@ def main():
               # 正则化部分梯度
               delta_w2 += LAMDA * w2
               delta_b2 = np.sum(delta_y_mean, axis=0, keepdims=True)
-              w2 = w2 - LEARNING_RATE * delta_w2
-              b2 = b2 - LEARNING_RATE * delta_b2
+              w2 = w2 - learning_rate * delta_w2
+              b2 = b2 - learning_rate * delta_b2
 
               dhidden = np.dot(delta_y_mean, w2.T)
               # backprop the ReLU non-linearity
@@ -270,8 +272,8 @@ def main():
               # 正则化部分梯度
               delta_w += LAMDA * w
               delta_b = np.sum(dhidden, axis=0, keepdims=True)
-              w = w - LEARNING_RATE * delta_w
-              b = b - LEARNING_RATE * delta_b
+              w = w - learning_rate * delta_w
+              b = b - learning_rate * delta_b
 
     # 持久化训练结果
     traceMatrix(w, epoch, 'final_w')
