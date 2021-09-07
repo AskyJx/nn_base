@@ -9,7 +9,8 @@ import numba
 
 # create logger
 exec_abs = os.getcwd()
-log_conf = exec_abs + '/config/logging.conf'
+log_conf = exec_abs + '/../config/logging.conf'
+# log_conf = exec_abs + '\\config\\logging.conf'
 logging.config.fileConfig(log_conf)
 logger = logging.getLogger('main')
 
@@ -99,7 +100,7 @@ class Tools:
 
     # 执行环境内存充裕blas方法较快
     # 否则使用jit后的np.matmul方法
-    @numba.jit
+    # @numba.jit
     def matmul(a, b):
         return np.matmul(a, b)
 
@@ -422,7 +423,7 @@ class ConvLayer(object):
     #    strides:
     # 返回
     #    x_col: batches *channel* (filter_size * filter_size) * ( conv_o_size * conv_o_size)
-    @numba.jit
+    # @numba.jit
     def vectorize4convdw_batches(self, x, filter_size, conv_o_size, strides):
         batches = x.shape[0]
         channels = x.shape[1]
@@ -451,7 +452,7 @@ class ConvLayer(object):
     #    strides:
     # 返回
     #    x_col: batches *(channel* filter_size * filter_size) * ( conv_o_size * conv_o_size)
-    @numba.jit
+    # @numba.jit
     def vectorize4conv_batches(self, x, filter_size, conv_o_size, strides):
         batches = x.shape[0]
         channels = x.shape[1]
@@ -565,7 +566,7 @@ class MaxPoolLayer(object):
     #     x规格: batch * depth_i * row * col,  其中 depth_i为输入节点矩阵深度，
     #     fileter_size: 过滤器尺寸
     #     strides: 缺省为1
-    #     type: 降采样类型，MAX/MEAN  ,缺省为MAX
+    #     type: 降采样类型,MAX/MEAN  ,缺省为MAX
     # 返回: 卷积层加权输出(co-relation)
     #       pooling : batch * depth_i * output_size * output_size
     #       pooling_idx : batch * depth_i * y_per_o_layer * x_per_filter
@@ -842,7 +843,8 @@ def main():
                          Params.POOL1_STRIDES, False, Params.DTYPE_DEFAULT)
 
     conv2Optimizer = AdmOptimizer(Params.BETA1, Params.BETA2, Params.EPS, Params.DTYPE_DEFAULT)
-    conv2 = ConvLayer('conv2', Params.MINI_BATCH_SIZE, Params.IMAGE_SIZE, Params.CONV1_O_DEPTH,
+    # conv2 = ConvLayer('conv2', Params.MINI_BATCH_SIZE, Params.IMAGE_SIZE, Params.CONV1_O_DEPTH,
+    conv2 = ConvLayer('conv2', Params.MINI_BATCH_SIZE, Params.CONV2_O_SIZE, Params.CONV1_O_DEPTH,
                       Params.CONV2_F_SIZE, Params.CONV2_O_DEPTH,
                       Params.CONV2_O_SIZE, Params.CONV2_STRIDES,
                       ReLU, conv2Optimizer, Params.DTYPE_DEFAULT)
