@@ -9,7 +9,7 @@ import numba
 
 # create logger
 exec_abs = os.getcwd()
-log_conf = exec_abs + '/config/logging.conf'
+log_conf = exec_abs + '/../config/logging.conf'
 logging.config.fileConfig(log_conf)
 logger = logging.getLogger('main')
 
@@ -19,7 +19,8 @@ exec_name = os.path.basename(__file__)
 trace_file = trace_file_path + exec_name + ".data"
 
 # 训练数据
-path_minst_unpack = 'Your_MNIST_data_unpacked_Dir'
+# path_minst_unpack = 'Your_MNIST_data_unpacked_Dir'
+path_minst_unpack = 'F:\cwork\Project\TF_py3.6\MNIST_data_unpack'
 
 # General params
 class Params:
@@ -102,7 +103,7 @@ class Tools:
 
     # 执行环境内存充裕blas方法较快
     # 否则使用jit后的np.matmul方法
-    @numba.jit
+    # @numba.jit
     def matmul(a, b):
         return np.matmul(a, b)
 
@@ -435,7 +436,7 @@ class ConvLayer(object):
     #    strides:
     # 返回
     #    x_col: batches *channel* (filter_size * filter_size) * ( conv_o_size * conv_o_size)
-    @numba.jit
+    # @numba.jit
     def vectorize4convdw_batches(self, x, filter_size, conv_o_size, strides):
         batches = x.shape[0]
         channels = x.shape[1]
@@ -464,7 +465,7 @@ class ConvLayer(object):
     #    strides:
     # 返回
     #    x_col: batches *(channel* filter_size * filter_size) * ( conv_o_size * conv_o_size)
-    @numba.jit
+    # @numba.jit
     def vectorize4conv_batches(self, x, filter_size, conv_o_size, strides):
         batches = x.shape[0]
         channels = x.shape[1]
@@ -983,7 +984,7 @@ def main():
     conv2Optimizer = AdmOptimizer(Params.BETA1, Params.BETA2, Params.EPS, Params.DTYPE_DEFAULT)
 
     # 在Conv2和relu/pool2之间加入bn2,conv2的输出不再激活
-    conv2 = ConvLayer('conv2', Params.MINI_BATCH_SIZE, Params.IMAGE_SIZE, Params.CONV1_O_DEPTH,
+    conv2 = ConvLayer('conv2', Params.MINI_BATCH_SIZE, Params.CONV2_O_SIZE, Params.CONV1_O_DEPTH,
                       Params.CONV2_F_SIZE, Params.CONV2_O_DEPTH,
                       Params.CONV2_O_SIZE, Params.CONV2_STRIDES,
                       NoAct, conv2Optimizer, Params.DTYPE_DEFAULT)
