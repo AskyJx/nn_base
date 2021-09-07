@@ -843,7 +843,7 @@ def main():
                          Params.POOL1_STRIDES, False, Params.DTYPE_DEFAULT)
 
     conv2Optimizer = AdmOptimizer(Params.BETA1, Params.BETA2, Params.EPS, Params.DTYPE_DEFAULT)
-    # conv2 = ConvLayer('conv2', Params.MINI_BATCH_SIZE, Params.IMAGE_SIZE, Params.CONV1_O_DEPTH,
+
     conv2 = ConvLayer('conv2', Params.MINI_BATCH_SIZE, Params.CONV2_O_SIZE, Params.CONV1_O_DEPTH,
                       Params.CONV2_F_SIZE, Params.CONV2_O_DEPTH,
                       Params.CONV2_O_SIZE, Params.CONV2_STRIDES,
